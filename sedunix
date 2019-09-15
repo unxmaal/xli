@@ -1,0 +1,58 @@
+#! /bin/sh
+# "@(#)x11:contrib/clients/xloadimage/sedunix 1.2 93/07/29 Labtam"
+#
+# scrip to masage file names from DOS to UNIX usage.
+# Given the UNIX style list of files to process.
+mv -f Imakefil Imakefile
+mv -f README.ori README.orig
+mv -f build_im build-imake
+mv -f bld_jpeg build-jpeg
+mv -f patchlev patchlevel
+mv -f copyrigh.h copyright.h
+mv -f kljcpyrg.h kljcpyrght.h
+mv -f mrmcpyrg.h mrmcpyrght.h
+mv -f mit.cpy mit.cpyrght
+mv -f tgncpyrg.h tgncpyrght.h
+mv -f buildsha.c buildshar.c
+mv -f buildsha.o buildshar.o
+mv -f cmuwmras.c cmuwmrast.c
+mv -f cmuwmras.o cmuwmrast.o
+mv -f cmuwmras.h cmuwmrast.h
+mv -f imagetyp.c imagetypes.c
+mv -f imagetyp.o imagetypes.o
+mv -f imagetyp.h imagetypes.h
+mv -f mc_table.c mc_tables.c
+mv -f mc_table.o mc_tables.o
+mv -f sunraste.c sunraster.c
+mv -f sunraste.o sunraster.o
+mv -f sunraste.h sunraster.h
+for i in $*
+do
+sed \
+-e s/Imakefil/Imakefile/ \
+-e s/README.ori/README.orig/ \
+-e s/build_im/build-imake/ \
+-e s/bld_jpeg/build-jpeg/ \
+-e s/patchlev/patchlevel/ \
+-e s/copyrigh.h/copyright.h/ \
+-e s/kljcpyrg.h/kljcpyrght.h/ \
+-e s/mrmcpyrg.h/mrmcpyrght.h/ \
+-e s/mit.cpy/mit.cpyrght/ \
+-e s/tgncpyrg.h/tgncpyrght.h/ \
+-e s/buildsha.c/buildshar.c/ \
+-e s/buildsha.o/buildshar.o/ \
+-e s/cmuwmras.c/cmuwmrast.c/ \
+-e s/cmuwmras.o/cmuwmrast.o/ \
+-e s/cmuwmras.h/cmuwmrast.h/ \
+-e s/imagetyp.c/imagetypes.c/ \
+-e s/imagetyp.o/imagetypes.o/ \
+-e s/imagetyp.h/imagetypes.h/ \
+-e s/mc_table.c/mc_tables.c/ \
+-e s/mc_table.o/mc_tables.o/ \
+-e s/sunraste.c/sunraster.c/ \
+-e s/sunraste.o/sunraster.o/ \
+-e s/sunraste.h/sunraster.h/ \
+$i > _tmp_
+mv -f _tmp_ $i
+done
+ 

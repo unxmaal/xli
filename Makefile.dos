@@ -1,0 +1,47 @@
+# "@(#)x11:contrib/clients/xloadimage/Makefile.dos 1.5 94/07/29 Labtam"
+# makefile for building xli with ndmake under MSDOS and djgpp.
+# This Makefile was automatically generated from Makefile.std.
+# using build-dos.
+
+DEFINES =  
+LIBS= -lm -lgr -lpc
+CFLAGS= -O4 -DDJGCC_BUGS -DNO_UNCOMPRESS $(DEFINES) 
+
+MISC = Makefile.std Imakefile Makefile.dos README README.novice ABOUTGAMMA  README.orig xli.man xli.txt xlito.man xlito.txt xliguide.man  build-imake build-dosmake build-jpeg buildshar.c seddos sedunix  patchlevel release
+BINMISC = chkgamma.jpg
+INCS = cmuwmrast.h copyright.h fbm.h g3.h gif.h image.h imagetypes.h  img.h jpeg.h jpeglib.h kljcpyrght.h mac.h mcidas.h mrmcpyrght.h options.h  pbm.h rle.h sunraster.h tgncpyrght.h xli.h xwd.h mit.cpyrght rgbtab.h  tga.h bmp.h pcd.h ddxli.h
+
+SRCS1 = bright.c clip.c cmuwmrast.c compress.c dither.c faces.c fbm.c  fill.c  g3.c gif.c halftone.c imagetypes.c img.c mac.c mcidas.c  mc_tables.c merge.c misc.c new.c options.c path.c pbm.c pcx.c  reduce.c jpeg.c jpeglib.c rle.c rlelib.c root.c rotate.c send.c smooth.c  sunraster.c  value.c window.c xbitmap.c xli.c  xpixmap.c xwd.c zio.c zoom.c ddxli.c doslib.c tga.c bmp.c pcd.c
+OBJS1 = bright.o clip.o cmuwmrast.o compress.o dither.o faces.o fbm.o  fill.o  g3.o gif.o halftone.o imagetypes.o img.o mac.o mcidas.o  mc_tables.o merge.o misc.o new.o options.o path.o pbm.o pcx.o  reduce.o jpeg.o jpeglib.o rle.o rlelib.o root.o rotate.o send.o smooth.o  sunraster.o  value.o window.o xbitmap.o xli.o  xpixmap.o xwd.o zio.o zoom.o ddxli.o doslib.o tga.o bmp.o pcd.o
+
+SRCS2 = xlito.c
+OBJS2 = xlito.o
+
+PROGRAMS = xli.exe xlito.exe
+
+CC = gcc
+
+.SUFFIXES : .o .c .s 
+
+.s.o:
+    $(CC) -c $(CFLAGS) $*.s
+
+.c.o:
+    $(CC) -c $(CFLAGS) $*.c
+
+all:: $(PROGRAMS)
+
+xli.exe: $(OBJS1) 
+	>linkfile $(OBJS1) $(LIBS)
+	$(CC) $(CFLAGS) -o xli @linkfile
+	coff2exe xli
+	del xli
+	del linkfile
+
+xlito.exe: $(OBJS2) 
+	>linkfile $(OBJS2) $(LIBS)
+	$(CC) $(CFLAGS) -o xlito @linkfile
+	coff2exe xlito
+	del xlito
+	del linkfile
+

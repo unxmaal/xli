@@ -1,0 +1,92 @@
+# "@(#)x11:contrib/clients/xloadimage/README.novice 1.1 93/07/28 Labtam"
+
+The best thing is to try and get someone a bit more knowledgeable
+to give you a hand. You at least need someone with the root password
+if you want to install xli in a universally accessible place. (This
+is on the asumption you are on a system with an administrator).
+
+I will run through a few things in the hope they may help.
+I'll start with the very basics and work up.
+
+You need to make a suitable directory to build xli in,
+and then uncompress and untar the ftp file in that
+directory. You should see all the .c,.h and other files
+one that is done. There is a README file there that
+has the most up-todate info.
+
+if you have the xli ftp file (eg. xli.115.tar.Z), then you
+need to uncompress it:
+
+	uncompress xli.115.tar.Z
+
+you should then see the file xli.115.tar
+
+You need to untar it something like:
+
+	tar xvof xli.115.tar
+
+This should give you a whole stream of
+messages as it unpackes all the files. You then
+need to compile xli. The easiest way if X11 has
+been properly installed on your system, is to run
+xmkmf:
+
+	xmkmf
+
+This utility should be in /usr/bin/X11 allong with all the
+other standard X11 utilities. xmkmf re-makes the
+Makefile from the file Imakefile in way that is appropriate
+for your system. If this has worked properly you then
+should be able to go make:
+
+	make
+
+And you should see each of the source files being compiled,
+and then linked at the end to produce the executable files
+xli and xlito.
+
+You should then try xli out, and theck that it works. eg.
+from the directory where you have made xli, try
+
+	./xli chkgamma.jpg
+
+And see that the gamma checking image is loaded ok.
+You should try it out on other image too.
+You then need to install it, either manually by copying
+xli and xlito into /usr/bin/X11 yourself (and changing
+the ownership and permissions appropriately), or
+you could try 
+
+	make install
+
+To save some space you might like to strip the binary files
+before you install them. The removes redundant information.
+
+	strip xli xlito
+should do the trick.
+
+If the xmkmf failes, or it doesn't compile from the
+Makefile that xmkmf produces, you can try compiling
+with the standard makefile. You have to choose an
+appropriate target:
+
+std	a BSD type system (ie sun etc)
+sysv	a SYSTEM V type system
+
+
+You do this something like:
+
+	make -f Makefile.std std
+
+or
+
+	make -f Makefile.std sysv
+
+You then need to install xli in the usual way. If you use
+one of the Makefile installs, you might want to be careful
+that you don't already have files in /usr/bin/X11 called
+xview or setbg, as the install script will overwrite them,
+and xview is a name used for something else on some sun
+systems. In this case you would want to install just xli
+and xlito by hand (as described previously).
+

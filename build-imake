@@ -1,0 +1,63 @@
+#! /bin/sh
+# "@(#)x11:contrib/clients/xloadimage/build-imake 1.9 94/07/29 Labtam"
+#
+# this program is used for generating Imakefiles
+
+OUT=Imakefile
+
+echo '# "_Z__M_ _I_ _E_ Labtam"' | sed -e s/_/%/g > $OUT
+
+cat >> $OUT << END_OF_INPUT
+# Imakefile for building within the X11 source tree.
+# This Imakefile was automatically generated from Makefile.std,
+# using the build-image script.
+#
+# If you have problems building, you should read the README file and
+# consider using Makefile.std.
+
+#ifdef HPArchitecture
+      CCOPTIONS = -Aa -D_HPUX_SOURCE
+#endif
+
+    SYSPATHFILE = $(XAPPLOADDIR)/Xloadimage
+        DEPLIBS = $(DEPXLIB)
+LOCAL_LIBRARIES = $(XLIB)
+SYS_LIBRARIES   = -lm
+END_OF_INPUT
+echo "        DEFINES = $5" >> $OUT
+echo "" >> $OUT
+
+echo "SRCS1 = $1" >> $OUT
+echo "OBJS1 = $2" >> $OUT
+
+echo "SRCS2 = $3" >> $OUT
+echo "OBJS2 = $4" >> $OUT
+
+cat >> $OUT << END_OF_INPUT
+
+PROGRAMS = xli xlito
+
+ComplexProgramTarget_1(xli,$(DEFINES) $(LOCAL_LIBRARIES),)
+ComplexProgramTarget_2(xlito,,)
+
+install:: $(SYSPATHFILE)
+	$(RM) $(BINDIR)/xview $(BINDIR)/xsetbg
+	$(LN) $(BINDIR)/xli $(BINDIR)/xview
+	$(LN) $(BINDIR)/xli $(BINDIR)/xsetbg
+
+$(SYSPATHFILE):
+	@echo "*** Creating default $(SYSPATHFILE) since you"
+	@echo "*** don't have one. This file is used to set up default places"
+	@echo "*** and names to look for images.  You probably want to edit"
+	@echo "*** it for your site.  See the xloadimage manual page for"
+	@echo "*** details on the contents of this file."
+	cp /dev/null $(SYSPATHFILE)
+	echo "path=$(INCDIR)/bitmaps $(INCDIR)/images" \
+		>> $(SYSPATHFILE)
+	echo "extension=.gif .jpg .rle .csun .msun .sun .face .xbm .bm" \
+		>>$(SYSPATHFILE)
+	chmod a+r $(SYSPATHFILE)
+
+END_OF_INPUT
+
+chmod 444 $OUT

@@ -1,0 +1,68 @@
+#! /bin/sh
+# "@(#)x11:contrib/clients/xloadimage/build-dosmake 1.4 94/07/29 Labtam"
+#
+# this program is used to build an MSDOS ndmake djgcc makefile
+
+OUT=Makefile.dos
+
+echo '# "%Z\c' > $OUT
+echo '%%M\c' >> $OUT
+echo '% %I\c' >> $OUT
+echo '% %E\c' >> $OUT
+echo '% Labtam"' >> $OUT
+cat >> $OUT << END_OF_INPUT
+# makefile for building xli with ndmake under MSDOS and djgpp.
+# This Makefile was automatically generated from Makefile.std.
+# using build-dos.
+
+END_OF_INPUT
+echo "DEFINES = $5" >> $OUT
+cat >> $OUT << END_OF_INPUT
+LIBS= -lm -lgr -lpc
+CFLAGS= -O4 -DDJGCC_BUGS -DNO_UNCOMPRESS $(DEFINES) 
+
+END_OF_INPUT
+echo "MISC = $6" >> $OUT
+echo "BINMISC = $7" >> $OUT
+echo "INCS = $8" >> $OUT
+echo "" >> $OUT
+echo "SRCS1 = $1" >> $OUT
+echo "OBJS1 = $2" >> $OUT
+echo "" >> $OUT
+echo "SRCS2 = $3" >> $OUT
+echo "OBJS2 = $4" >> $OUT
+cat >> $OUT << END_OF_INPUT
+
+PROGRAMS = xli.exe xlito.exe
+
+CC = gcc
+
+.SUFFIXES : .o .c .s 
+
+.s.o:
+END_OF_INPUT
+echo '    $(CC) -c $(CFLAGS) $*.s' >> $OUT
+cat >> $OUT << END_OF_INPUT
+
+.c.o:
+END_OF_INPUT
+echo '    $(CC) -c $(CFLAGS) $*.c' >> $OUT
+cat >> $OUT << END_OF_INPUT
+
+all:: $(PROGRAMS)
+
+xli.exe: $(OBJS1) 
+	>linkfile $(OBJS1) $(LIBS)
+	$(CC) $(CFLAGS) -o xli @linkfile
+	coff2exe xli
+	del xli
+	del linkfile
+
+xlito.exe: $(OBJS2) 
+	>linkfile $(OBJS2) $(LIBS)
+	$(CC) $(CFLAGS) -o xlito @linkfile
+	coff2exe xlito
+	del xlito
+	del linkfile
+
+END_OF_INPUT

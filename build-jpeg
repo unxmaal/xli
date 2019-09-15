@@ -1,0 +1,124 @@
+#! /bin/sh
+# "@(#)x11:contrib/clients/xloadimage/build-jpeg 1.3 93/07/28 Labtam"
+#
+# script to build xli jpeg files from normal jpeg distribution
+# NOTE that you don't need this to build xli, - this is just
+# to ease porting of new versions of the jpeg library.
+# This script should produce the files jpeglib.h and jpeglib.c
+# ready to be put into the xli distribution.
+# This script is meant to be run manually in the jpeg distibution
+# directory.
+
+# create jpeg library include file
+
+JPEG_H_FILES="jpegdata.h jmemsys.h"
+
+cat $JPEG_H_FILES > jpeglib.h
+
+# create jpeg library source file
+JPEG_C_FILES="jdcolor.c jddeflts.c jdhuff.c jdmaster.c jdmcu.c \
+              jdpipe.c jdsample.c jmemmgr.c jmemnobs.c jrdjfif.c \
+              jrevdct.c jutils.c"
+
+echo "/*" > jpeglib.c
+cat README | sed -e "s/^/ * /" >> jpeglib.c
+echo " */" >> jpeglib.c
+
+for i in $JPEG_C_FILES
+do
+ ./ansi2knr $i | sed -e "s/^#include \"[a-zA-Z]*.h\"/#include \"jpeg.h\"/" >> jpeglib.c
+done
+
+# summary of the xloadimage/xli porting notes from Tom Lane:
+
+# The Independent JPEG Group's JPEG software
+# ==========================================
+# 
+# The JPEG routines in this program are taken from the Independent JPEG Group's
+# free JPEG software.  The files named j*.h, j*.c are from the IJG code, except
+# for jpeg.c, which provides an interface between the IJG code and the rest of
+# the program.
+# 
+# Only a subset of the IJG code is included in this program.  You can find the
+# complete IJG distribution at the archive sites listed below.  This file also
+# provides the text of the IJG copyright and terms of distribution, plus some
+# notes on adapting the IJG code for use in xloadimage.
+# 
+# This code is from IJG release 4 of 10-Dec-92.
+# 
+# CONVERSION NOTES
+# ================
+# 
+# These notes are directed towards xloadimage/xli, but might also be of use for
+# other applications that need to use the free JPEG code.
+# 
+# The objective here is to provide a JPEG library which is of minimal size and
+# is pre-configured for easy installation on typical Unix machines.  The
+# standard IJG distribution is not suitable because it provides many functions
+# not needed by xloadimage/xli, it requires some thought to install, and it is
+# larger than the whole of xloadimage/xli :-(.
+# 
+# What we want is a minimal library which is easily generated from the standard
+# IJG files, so that new versions of the IJG code can be dropped in with little
+# work.  We must keep application-specific interfacing routines separate from
+# the files that are derived from the IJG code.
+# 
+# xloadimage/xli only require the core JPEG decoder and JFIF-format file input
+# functions from the IJG library.  The JPEG compressor is not required, nor are
+# the non-JPEG file I/O modules, nor the color quantization modules (since
+# xloadimage/xli have their own quantization code).  Only Unix systems need be
+# supported.  I would further recommend that "block smoothing" not be supported,
+# since it is of little use at typical JPEG quality settings.  This leaves us
+# with the following IJG source files to be included:
+# 
+# 	jdcolor.c jddeflts.c jdhuff.c jdmaster.c jdmcu.c jdpipe.c jdsample.c
+# 	jrevdct.c jutils.c jrdjfif.c jmemmgr.c jmemnobs.c jinclude.h
+# 	jconfig.h jpegdata.h jmemsys.h
+# 
+# These files amount to about 230K in the standard IJG v4 distribution.  There
+# is some unused code that we could remove to pare down the files; for example,
+# compressor-only declarations could be removed from jpegdata.h.  But it's not
+# clear that this is worth the effort.  By my count only about 20K could be
+# saved without careful thought.  Similarly, it would be possible to save a
+# dozen or so K by combining all the files into one .c and one .h file, but this
+# would make it more difficult to generate new versions (hand editing would be
+# needed, and I think there are some duplicate static variables to be worried
+# about).  I'm inclined to say that leaving the files unmodified is worth that
+# much bloat.
+# 
+# Since the surrounding xloadimage code is written in non-ANSI C, we may as well
+# preprocess all the IJG code through ansi2knr before distribution; this way
+# we don't need to include ansi2knr.c.
+# 
+# We will edit jconfig.h and jinclude.h to pre-configure the code for Unix
+# installation.  jconfig.h will be set up as follows:
+#   Delete HAVE_STDC symbol.
+#   #undef PROTO			necessary since we de-ANSIfied the code.
+#   #define HAVE_UNSIGNED_CHAR	widely assumed by rest of xloadimage, anyway.
+#   #define HAVE_UNSIGNED_SHORT	ditto.
+#   CHAR_IS_UNSIGNED		noncritical; leave define commented out.
+#   RIGHT_SHIFT_IS_UNSIGNED	leave define commented out, mention in README.
+#   #define void char		rest of xloadimage doesn't use void*; but we
+# 				will leave this commented out unless necessary.
+#   #define const			rest of xloadimage doesn't use const.
+#   #undef NEED_FAR_POINTERS	we're not MSDOS, thank god.
+#   Delete TWO_FILE_COMMANDLINE, NEED_SIGNAL_CATCHER, DONT_USE_B_MODE.
+# 				only apply to the cjpeg/djpeg main programs.
+#   Delete encoder capability options, file format options except JFIF.
+#   #undef BLOCK_SMOOTHING_SUPPORTED
+#   #undef QUANT_1PASS_SUPPORTED
+#   #undef QUANT_2PASS_SUPPORTED
+# 
+# In jinclude.h: delete most of the autoconfiguring cruft.  Instead we will
+# unconditionally include sys/types.h (so do some other xloadimage files),
+# and will select string.h/strings.h, bcopy/memcpy the same way as in image.h.
+# This will make the jpeg modules behave the same as the rest of the code
+# in regards to system header files.
+# 
+# The above changes are the only ones that have been made to the files derived
+# from the IJG code; they should be easy to re-apply to new versions.
+# 
+# The interface code found in jpeg.c is derived from the IJG "example.c" file.
+# This code should require little or no change when new IJG versions are
+# installed; but check the IJG CHANGELOG for any changes that may have been made
+# to the subroutine library interface.

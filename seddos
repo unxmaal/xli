@@ -1,0 +1,54 @@
+#! /bin/sh
+# "@(#)x11:contrib/clients/xloadimage/seddos 1.2 93/07/29 Labtam"
+#
+# scrip to massage file names for DOS usage.
+# Given the UNIX style list of files to process.
+echo $* > _filelist_
+for i in $* _filelist_
+do
+sed \
+-e s/Imakefile/Imakefil/ \
+-e s/README.orig/README.ori/ \
+-e s/build-imake/build_im/ \
+-e s/build-jpeg/bld_jpeg/ \
+-e s/patchlevel/patchlev/ \
+-e s/copyright.h/copyrigh.h/ \
+-e s/kljcpyrght.h/kljcpyrg.h/ \
+-e s/mrmcpyrght.h/mrmcpyrg.h/ \
+-e s/mit.cpyrght/mit.cpy/ \
+-e s/tgncpyrght.h/tgncpyrg.h/ \
+-e s/buildshar.c/buildsha.c/ \
+-e s/buildshar.o/buildsha.o/ \
+-e s/cmuwmrast.c/cmuwmras.c/ \
+-e s/cmuwmrast.o/cmuwmras.o/ \
+-e s/cmuwmrast.h/cmuwmras.h/ \
+-e s/imagetypes.c/imagetyp.c/ \
+-e s/imagetypes.o/imagetyp.o/ \
+-e s/imagetypes.h/imagetyp.h/ \
+-e s/mc_tables.c/mc_table.c/ \
+-e s/mc_tables.o/mc_table.o/ \
+-e s/sunraster.c/sunraste.c/ \
+-e s/sunraster.o/sunraste.o/ \
+-e s/sunraster.h/sunraste.h/ \
+$i > _tmp_
+mv -f _tmp_ $i
+done
+mv -f Imakefile    Imakefil
+mv -f README.orig    README.ori
+mv -f build-imake  build_im
+mv -f build-jpeg   bld_jpeg
+mv -f buildshar.c  buildsha.c
+mv -f cmuwmrast.c  cmuwmras.c
+mv -f cmuwmrast.h  cmuwmras.h
+mv -f copyright.h  copyrigh.h
+mv -f imagetypes.c imagetyp.c
+mv -f imagetypes.h imagetyp.h
+mv -f kljcpyrght.h kljcpyrg.h
+mv -f mc_tables.c  mc_table.c
+mv -f mit.cpyrght       mit.cpy
+mv -f mrmcpyrght.h mrmcpyrg.h
+mv -f patchlevel   patchlev
+mv -f sunraster.c  sunraste.c
+mv -f sunraster.h  sunraste.h
+mv -f tgncpyrght.h tgncpyrg.h
+# leave _filelist_ so calling script can access files.

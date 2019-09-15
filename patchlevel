@@ -1,0 +1,17 @@
+/* #ident	"@(#)x11:contrib/clients/xloadimage/patchlevel 6.21 94/07/29 Labtam" */
+
+/* this defines the version and patchlevel of this version of xli
+ */
+
+#define VERSION      "1"
+#define PATCHLEVEL   "16"
+#define AUTHOR_EMAIL "graeme@labtam.oz.au"
+
+
+/* this defines the version and patchlevel of xloadimage that xli
+ * was derived from.
+ */
+
+#define ORIG_VERSION      "3"
+#define ORIG_PATCHLEVEL   "01"
+#define ORIG_AUTHOR_EMAIL "jimf@saber.com or ..!uunet!saber!jimf"
